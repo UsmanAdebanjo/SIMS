@@ -26,7 +26,7 @@ namespace SIMS.Controllers
         public ActionResult GetResults()
         {
             var result= _simsRepo.GetAll();
-            return Ok(result);
+            return Ok(result); 
         }
 
         [HttpGet]
@@ -45,25 +45,23 @@ namespace SIMS.Controllers
         public ActionResult AddStudent([FromBody]Student student)
         {
             _simsRepo.Add(student);
+            Console.WriteLine("Student " + student.FirstName + " created at " + DateTime.Now);
             return Created("",student);
+           
         }
 
-        [HttpPut]
+        [HttpPut("id")]
         public ActionResult UpdateStudent(Student student, Guid id)
         {
             var result = _simsRepo.Update(student, id);
-            if (result == true) { return Ok(); }
+            if (result == true)
+            {
+                Console.WriteLine("Student " + student.FirstName + " updated at " + DateTime.Now);
+                return Ok(); 
+            }
             else { return BadRequest("Something went wrong"); }
 
         }
-        //[HttpPut]
-        //public ActionResult UpdateStudent(Student student)
-        //{
-        //    var result = _simsRepo.Update(student);
-        //    if (result == true) { return Ok(); }
-        //    else { return BadRequest("Something went wrong"); }
-
-        //}
 
         [HttpDelete("id")]
         public ActionResult DeleteStudent(Guid id)

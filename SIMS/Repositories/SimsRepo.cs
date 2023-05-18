@@ -50,12 +50,13 @@ namespace SIMS.Repositories
                
                 if (valueInDb != null)
                 {
+                    
                     _context.Update(value);
                     _context.SaveChanges();
                 }
                 return true;
             }
-            catch (Exception)
+            catch (DbUpdateConcurrencyException)
             {
 
                 return false;
@@ -71,9 +72,9 @@ namespace SIMS.Repositories
                 
                 return true;
             }
-            catch (Exception)
+            catch (DbUpdateConcurrencyException)
             {
-
+                
                 return false;
             }
         }

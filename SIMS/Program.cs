@@ -15,7 +15,10 @@ builder.Services.AddDbContext<SimsDbContext>(options=>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddTransient<ISimsRepo<Student>, SimsRepo<Student>>();
+builder.Services.AddScoped<ISimsRepo<Student>, SimsRepo<Student>>();
+builder.Services.AddScoped<ISimsRepo<Course>, SimsRepo<Course>>();
+builder.Services.AddScoped<ISimsRepo<Grade>, SimsRepo<Grade>>();
+builder.Services.AddScoped<ISimsRepo<StudentCourse>, SimsRepo<StudentCourse>>();
 
 builder.Services.AddHttpClient<ThirdPartyApiService>(client => 
 {
