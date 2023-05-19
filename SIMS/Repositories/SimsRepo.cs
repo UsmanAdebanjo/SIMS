@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SIMS.Context;
 
 namespace SIMS.Repositories
@@ -6,14 +7,17 @@ namespace SIMS.Repositories
     public class SimsRepo<T> : ISimsRepo<T> where T : class
     {
         private readonly SimsDbContext _context;
-        private readonly DbSet<T> _dbSet;   
+        private readonly DbSet<T> _dbSet;
+
         public SimsRepo(SimsDbContext context)
         {
             _context = context;
             _dbSet =_context.Set<T>();
         }
+
         public void Add(T value)
         {
+            //_mapper.Map<T>(value);
             _context.Add(value);
             _context.SaveChanges();
         }
@@ -68,8 +72,8 @@ namespace SIMS.Repositories
             try
             {
                     _context.Update(value);
-                    _context.SaveChanges();
-                
+                _context.SaveChanges();
+
                 return true;
             }
             catch (DbUpdateConcurrencyException)
@@ -78,5 +82,24 @@ namespace SIMS.Repositories
                 return false;
             }
         }
+
+        public int SaveChanges()
+        {
+             _context.SaveChanges();
+            _context.Dispose();
+            return 1;
+            
+        }
+
+        //protected override void Dispose(bool disposing)
+        //{
+        //    _context.Dispose();
+        //}
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
     }
 }

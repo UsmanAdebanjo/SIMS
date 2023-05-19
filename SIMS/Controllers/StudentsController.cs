@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SIMS.Dtos;
 using SIMS.Models;
@@ -11,11 +12,14 @@ namespace SIMS.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly ISimsRepo<Student> _simsRepo;
-        public StudentsController(ISimsRepo<Student> simsRepo)
+        private readonly IMapper _mapper;   
+        public StudentsController(ISimsRepo<Student> simsRepo, IMapper mapper)
         {
-            _simsRepo = simsRepo;
-        }
 
+            _simsRepo = simsRepo;
+            _mapper = mapper;
+        }
+        
         [HttpGet("id")]
         public ActionResult GetResult(Guid id)
         {
@@ -26,6 +30,7 @@ namespace SIMS.Controllers
         public ActionResult GetResults()
         {
             var result= _simsRepo.GetAll();
+            _simsRepo.Dispose();
             return Ok(result); 
         }
 
@@ -42,21 +47,26 @@ namespace SIMS.Controllers
 
 
         [HttpPost]
-        public ActionResult AddStudent([FromBody]Student student)
+        public ActionResult AddStudent([FromBody]StudentDto studentDto)
         {
+           var student= _mapper.Map<Student>(studentDto);   
             _simsRepo.Add(student);
+            _simsRepo.SaveChanges();
+            //_simsRepo.Dispose();
             Console.WriteLine("Student " + student.FirstName + " created at " + DateTime.Now);
             return Created("",student);
            
         }
 
         [HttpPut("id")]
-        public ActionResult UpdateStudent(Student student, Guid id)
+        public ActionResult UpdateStudent(Student Student, Guid id)
         {
-            var result = _simsRepo.Update(student, id);
+            var result = _simsRepo.Update(Student, id);
             if (result == true)
             {
-                Console.WriteLine("Student " + student.FirstName + " updated at " + DateTime.Now);
+                //_simsRepo.SaveChanges();
+                //_simsRepo.Dispose();
+                Console.WriteLine("Student " + Student.FirstName + " updated at " + DateTime.Now);
                 return Ok(); 
             }
             else { return BadRequest("Something went wrong"); }
@@ -66,7 +76,9 @@ namespace SIMS.Controllers
         [HttpDelete("id")]
         public ActionResult DeleteStudent(Guid id)
         {
-           var i= _simsRepo.Delete(id);
+            _simsRepo.Delete(id);
+           var i= _simsRepo.SaveChanges();
+            _simsRepo.Dispose();
             if (i == 1)
             {
                 return NoContent();
@@ -74,5 +86,7 @@ namespace SIMS.Controllers
             else { return NotFound(); }
 
         }
+        
+        
     }
 }

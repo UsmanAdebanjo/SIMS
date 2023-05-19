@@ -1,4 +1,6 @@
-﻿namespace SIMS.Repositories
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace SIMS.Repositories
 {
     public interface ISimsRepo<T> where T : class
     {
@@ -11,6 +13,8 @@
         public T GetById(Guid id);
         public IEnumerable<T> GetAll();
 
+        public int SaveChanges();
+        public void Dispose();
 
     }
 }

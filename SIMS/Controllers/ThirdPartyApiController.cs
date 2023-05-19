@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using SIMS.Dtos;
 using SIMS.Services;
 
 namespace SIMS.Controllers
@@ -8,16 +10,19 @@ namespace SIMS.Controllers
     [ApiController]
     public class ThirdPartyApiController : ControllerBase
     {
-        private readonly RandomUserApiService _randomUserApiService;
-        public ThirdPartyApiController(RandomUserApiService randomUserApiService)
+        private readonly ThirdPartyApiClient _thirdPartyApiClient;
+        public ThirdPartyApiController(ThirdPartyApiClient thirdPartyApiClient)
         {
-            _randomUserApiService = randomUserApiService;
+            _thirdPartyApiClient = thirdPartyApiClient;
         }
 
         [HttpGet]
-        public ActionResult GetData()
+        public async Task <ActionResult> GetData()
         {
-            return Ok(_randomUserApiService.GetData());
+            var json = JsonConvert.DeserializeObject<List<Holiday>>(await _thirdPartyApiClient.GetApiData());
+
+            return Ok(json);
+            
         }
     }
 }
