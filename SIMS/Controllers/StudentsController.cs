@@ -59,14 +59,15 @@ namespace SIMS.Controllers
         }
 
         [HttpPut("id")]
-        public ActionResult UpdateStudent(Student Student, Guid id)
+        public ActionResult UpdateStudent(StudentDto StudentDto, Guid id)
         {
-            var result = _simsRepo.Update(Student, id);
+            var student=_mapper.Map<Student>(StudentDto);
+            var result = _simsRepo.Update(student, id);
             if (result == true)
             {
                 //_simsRepo.SaveChanges();
                 //_simsRepo.Dispose();
-                Console.WriteLine("Student " + Student.FirstName + " updated at " + DateTime.Now);
+                Console.WriteLine("Student " + student.FirstName + " updated at " + DateTime.Now);
                 return Ok(); 
             }
             else { return BadRequest("Something went wrong"); }
