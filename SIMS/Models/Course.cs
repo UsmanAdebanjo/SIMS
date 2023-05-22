@@ -17,4 +17,3 @@ namespace SIMS.Models
         public string CourseTitle { get; set; }
     }
 }
-//restcountries.com

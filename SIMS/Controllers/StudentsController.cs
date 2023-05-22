@@ -15,7 +15,6 @@ namespace SIMS.Controllers
         private readonly IMapper _mapper;   
         public StudentsController(ISimsRepo<Student> simsRepo, IMapper mapper)
         {
-
             _simsRepo = simsRepo;
             _mapper = mapper;
         }
@@ -30,7 +29,6 @@ namespace SIMS.Controllers
         public ActionResult GetResults()
         {
             var result= _simsRepo.GetAll();
-            _simsRepo.Dispose();
             return Ok(result); 
         }
 
@@ -47,26 +45,25 @@ namespace SIMS.Controllers
 
 
         [HttpPost]
-        public ActionResult AddStudent([FromBody]StudentDto studentDto)
+        public ActionResult AddStudent(StudentDto studentDto)
         {
-           var student= _mapper.Map<Student>(studentDto);   
+           var student= _mapper.Map<Student>(studentDto); 
+           
+
             _simsRepo.Add(student);
-            _simsRepo.SaveChanges();
-            //_simsRepo.Dispose();
             Console.WriteLine("Student " + student.FirstName + " created at " + DateTime.Now);
             return Created("",student);
            
         }
 
         [HttpPut("id")]
-        public ActionResult UpdateStudent(StudentDto StudentDto, Guid id)
+        public ActionResult UpdateStudent(StudentDto studentDto, Guid id)
         {
-            var student=_mapper.Map<Student>(StudentDto);
+            var student = _mapper.Map<Student>(studentDto);
+            student.Id=id;
             var result = _simsRepo.Update(student, id);
             if (result == true)
             {
-                //_simsRepo.SaveChanges();
-                //_simsRepo.Dispose();
                 Console.WriteLine("Student " + student.FirstName + " updated at " + DateTime.Now);
                 return Ok(); 
             }

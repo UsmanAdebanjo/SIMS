@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SIMS.Context;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SIMS.Repositories
 {
@@ -46,32 +47,51 @@ namespace SIMS.Repositories
             return dbData;
         }
 
-        public bool Update(T value, Guid id)
-        {
-            var valueInDb = GetById(id);
-            try
-            {
-               
-                if (valueInDb != null)
-                {
-                    
-                    _context.Update(value);
-                    _context.SaveChanges();
-                }
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
+        //public bool Update(T value, Guid id)
+        //{
+        //    var valueInDb = GetById(id);
+        //    try
+        //    {
 
+        //        if (valueInDb != null)
+        //        {
+        //            _context.Entry(valueInDb).CurrentValues.SetValues(value);
+
+        //            //_context.Update(value);
+
+        //            //_context.Entry<T>().State() = EntityState.Modified;
+
+        //            _context.SaveChanges();
+        //        }
+        //        return true;
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+
+        //        return false;
+        //    }
+        //}
+
+
+        public bool Update(T updated, Guid id)
+        {
+            if (updated == null)
                 return false;
+
+            T existing = GetById(id);
+            if (existing != null)
+            {
+                _context.Entry(existing).CurrentValues.SetValues(updated);
+                _context.SaveChanges();
             }
+            return true;
         }
 
         public bool Update(T value)
         {
             try
             {
-                    _context.Update(value);
+                _context.Update(value);
                 _context.SaveChanges();
 
                 return true;

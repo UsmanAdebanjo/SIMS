@@ -7,7 +7,7 @@ namespace SIMS.Context
     {
         public SimsDbContext(DbContextOptions<SimsDbContext> options): base(options)
         {
-
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

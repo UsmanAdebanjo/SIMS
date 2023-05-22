@@ -41,6 +41,7 @@ namespace SIMS.Controllers
         public ActionResult Update(GradeDto gradeDto, Guid id)
         {
             var grade = _mapper.Map<Grade>(gradeDto);
+            grade.Id = id;
             _simsRepo.Update(grade, id);
             return Ok();
         }

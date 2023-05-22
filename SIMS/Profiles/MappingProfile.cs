@@ -18,7 +18,7 @@ namespace SIMS.Profiles
             CreateMap<CourseDto, Course>();
 
             CreateMap<StudentCourse, StudentCourseDto>();
-            CreateMap<CourseDto, StudentCourse>();
+            CreateMap<StudentCourseDto, StudentCourse>();
         }
     }
 }

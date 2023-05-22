@@ -49,6 +49,7 @@ namespace SIMS.Controllers
         public ActionResult Put(Guid id, CourseDto courseDto)
         {
             var course = _mapper.Map<Course>(courseDto);
+            course.Id = id;
             _simsRepo.Update(course, id);
             return Ok();
         }
